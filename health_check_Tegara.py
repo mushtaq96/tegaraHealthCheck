@@ -24,6 +24,7 @@ from selenium .common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+import time
 
 options = Options()
 options.headless = False
@@ -39,21 +40,23 @@ def login():
     driver.find_element_by_id("login_btn").click()
     ##driver.save_screenshot('CREEP.png')
     try:
-        #button = driver.find_element_by_id("panel-btn")
         button = WebDriverWait(driver,5).until(EC.presence_of_element_located((By.ID,"panel-btn")))
         print('successfully loigged in')
         html = driver.execute_script("return document.getElementsByTagName('html')[0].innerHTML")
-        print(html)
-        driver2 = webdriver.PhantomJS()
-        driver2.get("https://app.tegara.jp/user/weather?logined")
-        html2 = driver2.execute_script("return document.documentElement.innerHTML;")
+        #print(html)
+                         
+        
         print("///////")
-        print(html2)
+        home()
+
     except NoSuchElementException:
         print('Incorrect login/password')
         
     finally:
+        time.sleep(3)
         driver.quit()
+def home():
+    select_date = driver.find_element_by_class_name("calender").click()
 login()
-
+home()
 
