@@ -1,4 +1,5 @@
-#from bs4 import BeautifulSoup as bs
+from bs4 import BeautifulSoup 
+import requests
 #from requests import Session
 #use session object 
 #Requests session is used when you intend keeping the context of a request, so the cookies and all information of that request session can be stored.
@@ -31,9 +32,9 @@ options.headless = False
 options.add_argument("--window-size=500,500")
 
 driver = webdriver.Chrome(options=options,executable_path="C:\\Users\\b.mushtaq\\Documents\\chromedriver.exe")
-
+url = 'https://app.tegara.jp/login'
 def login():
-    driver.get("https://app.tegara.jp/login")
+    driver.get(url)
     #print(driver.page_source)
     driver.find_element_by_name("loginId").send_keys("b.mushtaq@z-planet.co.jp")
     driver.find_element_by_name("loginPassword").send_keys("9ScxJ6jCEpmV33v")
@@ -42,21 +43,23 @@ def login():
     try:
         button = WebDriverWait(driver,5).until(EC.presence_of_element_located((By.ID,"panel-btn")))
         print('successfully loigged in')
-        html = driver.execute_script("return document.getElementsByTagName('html')[0].innerHTML")
-        #print(html)
-                         
-        
+        new_html = driver.page_source
+        soup = BeautifulSoup(new_html)
+        form = soup.find("form",{"id":"form_validation"})
+        print(form.input.attrs['value'])
         print("///////")
-        home()
+        #home()
 
     except NoSuchElementException:
         print('Incorrect login/password')
         
     finally:
-        time.sleep(3)
+        time.sleep(4)
         driver.quit()
+
 def home():
     select_date = driver.find_element_by_class_name("calender").click()
+
 login()
-home()
+#home()
 
